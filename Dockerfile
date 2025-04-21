@@ -25,4 +25,4 @@ COPY --from=builder /app/rp_handler.py .
 COPY --from=builder /app/requirements.txt .
 
 # Start the container
-CMD ["python3", "-u", "rp_handler.py"] 
+CMD ["python3", "-u", "main.py"] 
