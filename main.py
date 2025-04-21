@@ -28,12 +28,6 @@ class CustomOrpheusModel(OrpheusModel):
         )
 
 
-# Initialize the TTS engine
-engine = CustomOrpheusModel(
-    model_name="canopylabs/orpheus-tts-0.1-finetune-prod"
-)
-
-
 def create_wav_header(sample_rate=24000, bits_per_sample=16, channels=1):
     byte_rate = sample_rate * channels * bits_per_sample // 8
     block_align = channels * bits_per_sample // 8
@@ -118,6 +112,11 @@ def generator_handler(job):
 
 # Start the Serverless function when the script is run
 if __name__ == "__main__":
+    # Initialize the TTS engine
+    engine = CustomOrpheusModel(
+        model_name="canopylabs/orpheus-tts-0.1-finetune-prod"
+    )
+    # Start the Serverless function when the script is run
     runpod.serverless.start(
         {"handler": generator_handler, "return_aggregate_stream": True}
     )
