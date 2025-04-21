@@ -21,7 +21,7 @@ WORKDIR /app
 
 # Copy only the necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
-COPY --from=builder /app/rp_handler.py .
+COPY --from=builder /app/main.py .
 COPY --from=builder /app/requirements.txt .
 
 # Start the container
