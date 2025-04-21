@@ -1,10 +1,37 @@
+import os
+import torch
 import runpod
 import struct
+from transformers import AutoTokenizer
 from orpheus_tts import OrpheusModel
 from typing import Iterator
 
+
+AVAILABLE_VOICES = ["zoe", "zac", "jess", "leo", "mia", "julia", "leah"]
+
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+
+class CustomOrpheusModel(OrpheusModel):
+    """
+    Custom OrpheusModel class that overrides the tokenizer
+    to use the custom tokenizer
+    """
+
+    def __init__(self, model_name, dtype=torch.bfloat16):
+        self.model_name = self._map_model_params(model_name)
+        self.dtype = dtype
+        self.engine = self._setup_engine()
+        self.available_voices = AVAILABLE_VOICES
+        self.tokeniser = AutoTokenizer.from_pretrained(
+            model_name, token=HF_TOKEN, trust_remote_code=True
+        )
+
+
 # Initialize the TTS engine
-engine = OrpheusModel(model_name="canopylabs/orpheus-tts-0.1-finetune-prod")
+engine = CustomOrpheusModel(
+    model_name="canopylabs/orpheus-tts-0.1-finetune-prod"
+)
 
 
 def create_wav_header(sample_rate=24000, bits_per_sample=16, channels=1):
